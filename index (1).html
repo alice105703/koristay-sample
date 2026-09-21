@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>코리스테이 | 숲의 결을 따라 머무는 시간</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌲</text></svg>">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          pine:  '#1B2A1E',
+          moss:  '#3F5439',
+          sage:  '#B9C4AC',
+          bark:  '#7C6A52',
+          fog:   '#F5F2EA',
+          paper: '#FBFAF6',
+          ember: '#B8632F',
+          ink:   '#242821'
+        },
+        fontFamily: {
+          serif: ['"Noto Serif KR"', 'serif'],
+          sans:  ['"Pretendard"', 'sans-serif']
+        }
+      }
+    }
+  };
+</script>
+
+<style>
+  :root{ --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); }
+  html{ scroll-behavior:smooth; }
+  body{ font-family:'Pretendard',sans-serif; background:#F5F2EA; color:#242821; -webkit-font-smoothing:antialiased; }
+  h1,h2,h3,.serif{ font-family:'Noto Serif KR',serif; }
+  .ms{ font-family:'Material Symbols Outlined'; font-weight:300; font-variation-settings:'FILL' 0,'wght' 300,'GRAD' 0,'opsz' 24; line-height:1; }
+
+  [data-page]{ display:none; }
+  [data-page].active{ display:block; }
+
+  #hdr{ position:fixed; top:0; left:0; width:100%; z-index:100; transition:background .45s ease, box-shadow .45s ease; padding-top: var(--safe-top); }
+  #hdr.on{ background:rgba(27,42,30,0.94); backdrop-filter:blur(10px); box-shadow:0 1px 0 rgba(255,255,255,.06); }
+  .nav-link{ position:relative; transition:opacity .25s ease, color .25s ease; }
+  .nav-link:hover{ opacity:.65; }
+  .nav-link.is-active{ color:#B9C4AC; }
+
+  .ring{ border-radius:50%; border:1px solid currentColor; }
+  .ring-spin{ animation:spin 60s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .ring-spin-rev{ animation:spinrev 80s linear infinite; }
+  @keyframes spinrev{ to{ transform:rotate(-360deg); } }
+
+  #hero{ height:100svh; min-height:560px; position:relative; overflow:hidden; background:linear-gradient(180deg,#EFE6CE 0%,#CBD3B3 38%,#7C8F6E 68%,#3B4E37 100%); }
+  .hero-slide{ position:absolute; inset:0; background-size:cover; background-position:center 38%; background-repeat:no-repeat; opacity:0; transition:opacity 2.2s ease; filter:brightness(0.8) saturate(0.94); }
+  .hero-slide.is-active{ opacity:1; }
+  .hero-scrim{ position:absolute; inset:0; z-index:1; background:
+    linear-gradient(100deg, rgba(6,9,6,.7) 0%, rgba(6,9,6,.46) 32%, rgba(6,9,6,.18) 58%, rgba(6,9,6,.04) 78%),
+    linear-gradient(180deg, rgba(6,9,6,.34) 0%, rgba(6,9,6,.08) 24%, rgba(6,9,6,.22) 55%, rgba(4,7,4,.74) 100%); }
+  .hero-text-shadow{ text-shadow: 0 2px 18px rgba(0,0,0,.55), 0 1px 3px rgba(0,0,0,.5); }
+  #hero .layer{ position:absolute; left:0; right:0; bottom:0; width:100%; will-change:transform; }
+  .sun{ position:absolute; right:14%; top:14%; width:110px; height:110px; border-radius:50%; background:radial-gradient(circle at 35% 30%, #FBF2D6, #EBD9A0 60%, transparent 72%); filter:blur(.5px); }
+
+  .reveal{ opacity:0; transform:translateY(26px); transition:opacity .8s ease, transform .8s ease; }
+  .reveal.show{ opacity:1; transform:none; }
+
+  .cabin-card{ transition:transform .5s ease; }
+  .cabin-card:hover{ transform:translateY(-6px); }
+  .cabin-card:hover .cabin-art{ transform:scale(1.04); }
+  .cabin-art{ transition:transform .8s ease; }
+
+  .bento{ transition:transform .45s ease; }
+  .bento:hover{ transform:translateY(-3px); }
+
+  .gal-strip{ display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:6px; -webkit-overflow-scrolling:touch; }
+  .gal-strip::-webkit-scrollbar{ height:5px; }
+  .gal-strip::-webkit-scrollbar-thumb{ background:#D9D2C2; border-radius:4px; }
+
+  /* ---- room detail: large interactive gallery ---- */
+  .room-gallery-frame{ position:relative; width:100%; aspect-ratio:16/10; border-radius:20px; overflow:hidden; background:#EFEBE0; }
+  @media(max-width:640px){ .room-gallery-frame{ aspect-ratio:4/3.1; border-radius:16px; } }
+  .rg-slide{ position:absolute; inset:0; background-size:cover; background-position:center; opacity:0; transition:opacity .6s ease; display:flex; align-items:center; justify-content:center; color:#fff; }
+  .rg-slide.is-active{ opacity:1; }
+  .rg-icon{ opacity:.28; }
+  .rg-arrow{ position:absolute; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:9999px; background:rgba(251,249,246,.9); backdrop-filter:blur(4px); display:flex; align-items:center; justify-content:center; color:#1B2A1E; box-shadow:0 8px 22px rgba(15,20,10,.18); transition:background .2s ease, transform .2s ease; z-index:5; }
+  .rg-arrow:hover{ background:#fff; transform:translateY(-50%) scale(1.06); }
+  .rg-prev{ left:16px; } .rg-next{ right:16px; }
+  @media(min-width:768px){ .rg-prev{ left:22px; } .rg-next{ right:22px; } }
+  .rg-caption{ position:absolute; left:16px; bottom:16px; z-index:5; background:rgba(20,17,12,.58); backdrop-filter:blur(3px); color:#fff; font-size:12.5px; letter-spacing:.02em; padding:7px 15px; border-radius:9999px; }
+  .rg-counter{ position:absolute; right:16px; bottom:16px; z-index:5; background:rgba(20,17,12,.58); backdrop-filter:blur(3px); color:#fff; font-size:12px; letter-spacing:.05em; padding:7px 13px; border-radius:9999px; }
+  .room-gallery-thumbs{ display:flex; gap:10px; margin-top:14px; overflow-x:auto; padding-bottom:4px; -webkit-overflow-scrolling:touch; }
+  .room-gallery-thumbs::-webkit-scrollbar{ height:5px; }
+  .room-gallery-thumbs::-webkit-scrollbar-thumb{ background:#D9D2C2; border-radius:4px; }
+  .rg-thumb{ flex:none; width:104px; height:76px; border-radius:12px; overflow:hidden; background-size:cover; background-position:center; border:2px solid transparent; opacity:.55; cursor:pointer; transition:opacity .25s ease, border-color .25s ease, transform .25s ease; display:flex; align-items:center; justify-content:center; color:#fff; }
+  .rg-thumb .rg-icon{ font-size:20px; }
+  .rg-thumb:hover{ opacity:.85; transform:translateY(-2px); }
+  .rg-thumb.is-active{ opacity:1; border-color:#7C6A52; }
+
+  ::selection{ background:#B9C4AC; color:#1B2A1E; }
+  a{ text-decoration:none; }
+
+  #dim{ position:fixed; inset:0; background:rgba(10,14,10,.55); z-index:190; opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s ease; }
+  #dim.open{ opacity:1; visibility:visible; }
+  #drawer{ position:fixed; top:0; right:0; z-index:200; width:80%; max-width:320px; height:100%; background:#1B2A1E; transform:translateX(101%); transition:transform .45s cubic-bezier(.7,0,.18,1); padding:26px 26px calc(28px + var(--safe-bottom)); display:flex; flex-direction:column; }
+  #drawer.open{ transform:translateX(0); }
+  .m-link{ display:block; padding:15px 2px; font-size:16px; color:rgba(255,255,255,.92); border-bottom:1px solid rgba(255,255,255,.08); }
+
+  .page-banner{ padding-top:128px; }
+  @media(min-width:768px){ .page-banner{ padding-top:150px; } }
+
+  /* ---- prologue banner (story page) ---- */
+  #prologue{ height:72vh; min-height:520px; position:relative; overflow:hidden; background:linear-gradient(180deg,#EFE6CE 0%,#CBD3B3 38%,#7C8F6E 68%,#3B4E37 100%); }
+  #prologue .layer{ position:absolute; left:0; right:0; bottom:0; width:100%; }
+  #prologue .fade{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(15,20,12,0) 40%, rgba(10,14,9,.75) 100%); }
+  .dot-nav span{ display:block; height:2px; border-radius:2px; background:rgba(255,255,255,.35); }
+  .dot-nav span:first-child{ width:32px; background:rgba(255,255,255,.92); }
+  .dot-nav span:not(:first-child){ width:12px; }
+
+  /* ---- full-bleed break-out ---- */
+  .bleed{ width:100vw; position:relative; left:50%; right:50%; margin-left:-50vw; margin-right:-50vw; }
+
+  /* ---- asymmetric photo collage ---- */
+  .collage{ display:flex; flex-direction:column; gap:20px; }
+  .collage .c-a,.collage .c-b,.collage .c-c,.collage .c-d{ aspect-ratio:4/3; }
+  @media(min-width:768px){
+    .collage{ display:grid; grid-template-columns:1fr 1.5fr 1fr; grid-template-rows:230px 230px auto; gap:22px; }
+    .collage .c-a,.collage .c-b,.collage .c-c,.collage .c-d{ aspect-ratio:auto; }
+    .collage .c-a{ grid-column:1; grid-row:1/3; }
+    .collage .c-b{ grid-column:2; grid-row:1/3; }
+    .collage .c-c{ grid-column:3; grid-row:1; }
+    .collage .c-d{ grid-column:3; grid-row:2; }
+    .collage .c-q{ grid-column:2; grid-row:3; align-self:start; padding-top:6px; }
+  }
+</style>
+</head>
+<body class="bg-fog text-ink is-home">
+
+<header id="hdr">
+  <div class="max-w-[1320px] mx-auto px-6 md:px-10 h-[84px] flex items-center justify-between">
+    <a href="#/home" class="flex items-center gap-2.5">
+      <span class="ms text-white/90" style="font-size:22px;">forest</span>
+      <span class="serif text-white text-lg md:text-xl tracking-wide leading-none">코리스테이<span class="hidden sm:inline text-white/55 text-[13px] font-sans tracking-[0.2em] align-middle ml-2">KORI STAY</span></span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-9 text-[14.5px] text-white/90">
+      <a href="#/story" class="nav-link" data-nav="story">스테이 소개</a>
+
+      <div class="relative group">
+        <a href="#/rooms" class="nav-link inline-flex items-center gap-1" data-nav="rooms">
+          객실 <span class="ms transition-transform duration-200 group-hover:rotate-180" style="font-size:17px;">expand_more</span>
+        </a>
+        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-48 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
+          <div class="bg-paper text-ink rounded-xl shadow-2xl overflow-hidden py-2 border border-black/5">
+            <a href="#/rooms" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">객실 전체보기</a>
+            <a href="#/room-pine" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">소나무동</a>
+            <a href="#/room-birch" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">자작나무동</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <a href="#/amenities" class="nav-link inline-flex items-center gap-1" data-nav="amenities">
+          부대시설 <span class="ms transition-transform duration-200 group-hover:rotate-180" style="font-size:17px;">expand_more</span>
+        </a>
+        <div class="absolute left-1/2 -translate-x-1/2 top-full pt-3 w-56 opacity-0 invisible translate-y-1 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-200 z-50">
+          <div class="bg-paper text-ink rounded-xl shadow-2xl overflow-hidden py-2 border border-black/5">
+            <a href="#/amenities" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">부대시설 전체보기</a>
+            <a href="#/amenity-fireplace" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">장작 벽난로</a>
+            <a href="#/amenity-jacuzzi" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">야외 자쿠지</a>
+            <a href="#/amenity-trail" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">숲길 산책로</a>
+            <a href="#/amenity-stars" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">별빛 테라스 · 캠프파이어</a>
+            <a href="#/amenity-brunch" class="block px-4 py-2.5 text-[13.5px] hover:bg-sage/20 hover:text-pine transition-colors">아침 브런치</a>
+          </div>
+        </div>
+      </div>
+
+      <a href="#/nature" class="nav-link" data-nav="nature">숲 산책</a>
+      <a href="#/reservation" class="nav-link" data-nav="reservation">예약안내</a>
+    </nav>
+
+    <div class="hidden md:flex items-center gap-5">
+      <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 border border-white/35 text-white text-[13px] tracking-wide rounded-full hover:bg-white hover:text-pine transition-colors">
+        <span class="ms" style="font-size:16px;">calendar_month</span>예약 문의
+      </a>
+    </div>
+
+    <button id="burger" class="md:hidden flex flex-col justify-center gap-[5px] w-10 h-10 items-center" aria-label="메뉴 열기">
+      <span class="block w-5 h-[1.5px] bg-white"></span>
+      <span class="block w-5 h-[1.5px] bg-white"></span>
+    </button>
+  </div>
+</header>
+
+<div id="dim"></div>
+<aside id="drawer">
+  <div class="flex justify-between items-center mb-8">
+    <span class="serif text-2xl text-sage">코리스테이</span>
+    <button id="drawerClose" class="text-white/80 w-9 h-9 flex items-center justify-center"><span class="ms" style="font-size:24px;">close</span></button>
+  </div>
+  <nav class="flex flex-col">
+    <a href="#/story" class="m-link">스테이 소개</a>
+    <a href="#/rooms" class="m-link">객실</a>
+    <a href="#/amenities" class="m-link">부대시설</a>
+    <a href="#/nature" class="m-link">숲 산책</a>
+    <a href="#/reservation" class="m-link">예약안내</a>
+  </nav>
+  <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="mt-8 inline-flex items-center justify-center gap-2 px-5 py-3.5 bg-sage text-pine rounded-full text-sm font-medium">
+    <span class="ms" style="font-size:18px;">calendar_month</span>예약 문의하기
+  </a>
+</aside>
+
+<main id="app">
+
+<div data-page="home" class="active">
+
+  <section id="hero">
+    <div class="hero-slide is-active" style="background-image:url(assets/img-01.jpg);"></div>
+    <div class="hero-slide" style="background-image:url(assets/img-02.jpg);"></div>
+    <div class="hero-slide" style="background-image:url(assets/img-03.jpg);"></div>
+    <div class="hero-scrim"></div>
+    <svg class="absolute -right-24 -top-24 w-[420px] h-[420px] text-white/20 ring-spin" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="78" class="ring"/><circle cx="100" cy="100" r="58" class="ring"/>
+    </svg>
+    <div class="relative z-20 h-full flex flex-col items-start justify-center px-6 md:px-16 max-w-[1320px] mx-auto pt-16">
+      <span class="hero-text-shadow text-[13px] tracking-[0.28em] text-white/90 mb-5">GANGWON · INJE FOREST</span>
+      <h1 class="hero-text-shadow serif text-white text-[34px] leading-[1.35] sm:text-[46px] sm:leading-[1.3] md:text-[58px] md:leading-[1.22] font-medium max-w-[13ch] md:max-w-[15ch]">
+        나무 사이로<br>스며드는 아침
+      </h1>
+      <p class="hero-text-shadow text-white/90 text-[15px] md:text-[17px] mt-6 max-w-md font-light leading-relaxed">
+        방태산 자락, 소나무 숲에 둘러싸인 다섯 채의 독채.<br class="hidden sm:block">
+        하루 한 팀, 오직 나무와 바람 소리만 곁에 둡니다.
+      </p>
+      <a href="#/reservation" class="hero-text-shadow mt-9 inline-flex items-center gap-2 pb-2 border-b border-white/70 text-white text-[13px] tracking-widest uppercase hover:border-white transition-colors">
+        예약 안내 보기 <span class="ms" style="font-size:16px;">arrow_forward</span>
+      </a>
+    </div>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 text-white/70">
+      <span class="ms animate-bounce" style="font-size:22px;">keyboard_arrow_down</span>
+    </div>
+  </section>
+
+  <section class="reveal py-24 md:py-32 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto grid md:grid-cols-12 gap-14 items-center">
+      <div class="md:col-span-5">
+        <span class="text-[13px] tracking-[0.25em] text-moss font-medium">OUR STORY</span>
+        <h2 class="serif text-[28px] md:text-[36px] leading-[1.4] mt-4 text-pine">가꾸지 않은 숲의<br>결을 그대로</h2>
+        <div class="w-10 h-px bg-bark my-7"></div>
+        <p class="text-[15px] leading-[1.95] text-ink/75 font-light">
+          코리스테이는 방태산 자락, 30년 넘은 소나무 군락 안에 자리했습니다. 땅을 깎아 건물을 앉히는 대신
+          나무가 자란 자리를 피해 다섯 채를 흩어 지었고, 머무는 동안 만큼은 이 숲의 결을 그대로 느끼셨으면 합니다.
+        </p>
+        <a href="#/story" class="inline-flex items-center gap-2 mt-8 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">
+          스테이 소개 자세히 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+        </a>
+      </div>
+      <div class="md:col-span-7 relative">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden relative bg-cover bg-center" style="background-image:url(assets/img-04.jpg);">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/0 to-black/10"></div>
+          <div class="absolute top-7 left-7 flex items-center gap-2 text-white text-[13px] tracking-widest" style="text-shadow:0 2px 10px rgba(0,0,0,.5);">
+            <span class="ms" style="font-size:16px;">park</span> 소나무 군락지 내 5개 동
+          </div>
+        </div>
+        <div class="hidden md:block absolute -bottom-8 -left-8 bg-paper rounded-xl px-7 py-5 shadow-[0_18px_40px_rgba(27,42,30,.14)] w-[220px]">
+          <p class="serif text-3xl text-pine leading-none">1,650<span class="text-base align-top ml-1">평</span></p>
+          <p class="text-[13px] text-ink/60 mt-2 leading-relaxed">전체 부지 규모<br>동 간 최소 거리 45m</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal py-24 md:py-32 px-6 md:px-16 bg-paper border-y border-black/5">
+    <div class="max-w-[1320px] mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+        <div>
+          <span class="text-[13px] tracking-[0.25em] text-moss font-medium">ROOMS</span>
+          <h2 class="serif text-[28px] md:text-[36px] mt-4 text-pine">두 가지 동, 다섯 채</h2>
+        </div>
+        <a href="#/rooms" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">
+          전체 객실 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-12 gap-8">
+        <a href="#/room-pine" class="cabin-card md:col-span-7 block group">
+          <div class="aspect-[16/11] rounded-2xl overflow-hidden relative">
+            <img src="assets/img-05.jpg" alt="소나무동 침실" class="cabin-art absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0"></div>
+            <div class="absolute top-6 left-6 px-4 py-1.5 bg-paper/90 rounded-full text-[13px] tracking-widest text-moss uppercase">Pine House · 소나무동</div>
+          </div>
+          <div class="flex justify-between items-end mt-6">
+            <div>
+              <h3 class="serif text-xl text-pine">소나무동</h3>
+              <p class="text-[14px] text-ink/60 mt-2 font-light">벽난로와 통나무 인테리어, 기준 2인 · 최대 4인</p>
+            </div>
+            <span class="ms text-bark group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+
+        <a href="#/room-birch" class="cabin-card md:col-span-5 block group mt-0 md:mt-16">
+          <div class="aspect-[16/13] rounded-2xl overflow-hidden relative">
+            <img src="assets/img-06.jpg" alt="자작나무동 야외 욕조" class="cabin-art absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0"></div>
+            <div class="absolute top-6 left-6 px-4 py-1.5 bg-paper/90 rounded-full text-[13px] tracking-widest text-bark uppercase">Birch House · 자작나무동</div>
+          </div>
+          <div class="flex justify-between items-end mt-6">
+            <div>
+              <h3 class="serif text-xl text-pine">자작나무동</h3>
+              <p class="text-[14px] text-ink/60 mt-2 font-light">프라이빗 야외 욕조, 기준 4인 · 최대 6인</p>
+            </div>
+            <span class="ms text-bark group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal py-24 md:py-32 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-16">
+        <div>
+          <span class="text-[13px] tracking-[0.25em] text-moss font-medium">EXPERIENCE</span>
+          <h2 class="serif text-[28px] md:text-[36px] mt-4 text-pine">숲에서 보내는 하루</h2>
+        </div>
+        <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">
+          부대시설 전체 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+        </a>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <a href="#/amenity-fireplace" class="bento md:col-span-2 text-white rounded-2xl p-9 flex flex-col justify-between min-h-[260px] md:min-h-[300px] relative overflow-hidden bg-cover bg-center" style="background-image:url(assets/img-07.jpg)">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/5"></div>
+          <span class="ms text-sage relative" style="font-size:30px;">local_fire_department</span>
+          <div class="relative">
+            <h3 class="serif text-2xl mt-6" style="text-shadow:0 2px 10px rgba(0,0,0,.5);">동마다 벽난로, 겨울엔 장작 무료 제공</h3>
+            <p class="text-white/85 text-[14px] mt-3 font-light" style="text-shadow:0 1px 6px rgba(0,0,0,.5);">체크인 전 미리 불을 지펴 도착하시면 따뜻한 실내를 만나실 수 있어요.</p>
+          </div>
+        </a>
+
+        <a href="#/amenity-jacuzzi" class="bento rounded-2xl p-8 flex flex-col justify-between min-h-[240px] relative overflow-hidden bg-cover bg-center text-white" style="background-image:url(assets/img-08.jpg);">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/5"></div>
+          <span class="ms relative" style="font-size:28px;">hot_tub</span>
+          <div class="relative">
+            <h3 class="text-[16px] font-medium mt-6" style="text-shadow:0 2px 8px rgba(0,0,0,.5);">야외 자쿠지</h3>
+            <p class="text-white/85 text-[13.5px] mt-2 font-light" style="text-shadow:0 1px 6px rgba(0,0,0,.5);">자작나무동 전용, 사계절 온수</p>
+          </div>
+        </a>
+
+        <a href="#/amenity-trail" class="bento rounded-2xl p-8 flex flex-col justify-between min-h-[240px] relative overflow-hidden bg-cover bg-center text-white" style="background-image:url(assets/img-09.jpg);">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/5"></div>
+          <span class="ms relative" style="font-size:28px;">hiking</span>
+          <div class="relative">
+            <h3 class="text-[16px] font-medium mt-6" style="text-shadow:0 2px 8px rgba(0,0,0,.5);">숲길 산책로</h3>
+            <p class="text-white/85 text-[13.5px] mt-2 font-light" style="text-shadow:0 1px 6px rgba(0,0,0,.5);">단지 내 1.2km 순환 코스</p>
+          </div>
+        </a>
+
+        <a href="#/amenity-brunch" class="bento rounded-2xl p-8 flex flex-col justify-between min-h-[240px] relative overflow-hidden bg-cover bg-center text-white" style="background-image:url(assets/img-10.jpg);">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/5"></div>
+          <span class="ms relative" style="font-size:28px;">bakery_dining</span>
+          <div class="relative">
+            <h3 class="text-[16px] font-medium mt-6" style="text-shadow:0 2px 8px rgba(0,0,0,.5);">아침 브런치</h3>
+            <p class="text-white/85 text-[13.5px] mt-2 font-light" style="text-shadow:0 1px 6px rgba(0,0,0,.5);">동으로 배달, 전날 예약제</p>
+          </div>
+        </a>
+
+        <a href="#/amenity-stars" class="bento rounded-2xl p-8 flex flex-col justify-between min-h-[240px] relative overflow-hidden bg-cover bg-center text-white" style="background-image:url(assets/img-11.jpg);">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/10"></div>
+          <span class="ms relative" style="font-size:28px;">nightlight</span>
+          <div class="relative">
+            <h3 class="text-[16px] font-medium mt-6" style="text-shadow:0 2px 8px rgba(0,0,0,.5);">별빛 테라스 · 캠프파이어</h3>
+            <p class="text-white/85 text-[13.5px] mt-2 font-light" style="text-shadow:0 1px 6px rgba(0,0,0,.5);">해가 지면 조명이 들어옵니다</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal py-24 md:py-32 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -left-28 top-1/2 -translate-y-1/2 w-[420px] h-[420px] text-white/[0.06] ring-spin-rev" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="78" class="ring"/><circle cx="100" cy="100" r="58" class="ring"/><circle cx="100" cy="100" r="36" class="ring"/>
+    </svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <span class="text-[13px] tracking-[0.25em] text-sage font-medium">AROUND KORI STAY</span>
+      <h2 class="serif text-[26px] md:text-[34px] mt-4 max-w-lg leading-[1.45]">걸어서 닿을 수 있는<br>세 가지 풍경</h2>
+      <div class="grid md:grid-cols-3 gap-10 mt-16">
+        <div>
+          <p class="text-sage text-[13px] tracking-widest">01 · 도보 5분</p>
+          <h3 class="serif text-lg mt-3">방태천 계곡</h3>
+          <p class="text-white/60 text-[14px] mt-2 leading-relaxed font-light">여름엔 발을 담그고, 겨울엔 물소리만 듣고 오셔도 좋아요.</p>
+        </div>
+        <div>
+          <p class="text-sage text-[13px] tracking-widest">02 · 도보 12분</p>
+          <h3 class="serif text-lg mt-3">전망 데크</h3>
+          <p class="text-white/60 text-[14px] mt-2 leading-relaxed font-light">해발 780m, 일출과 운해를 볼 수 있는 지점입니다.</p>
+        </div>
+        <div>
+          <p class="text-sage text-[13px] tracking-widest">03 · 차량 8분</p>
+          <h3 class="serif text-lg mt-3">방태산 자연휴양림</h3>
+          <p class="text-white/60 text-[14px] mt-2 leading-relaxed font-light">장기 산행을 원하신다면 이곳에서 등산로가 이어집니다.</p>
+        </div>
+      </div>
+      <a href="#/nature" class="inline-flex items-center gap-2 mt-14 text-[13.5px] tracking-widest uppercase text-sage border-b border-sage/40 pb-1 hover:border-sage transition-colors">
+        숲 산책 코스 자세히 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="reveal py-24 md:py-32 px-6 md:px-16">
+    <div class="max-w-4xl mx-auto text-center">
+      <span class="text-[13px] tracking-[0.25em] text-moss font-medium">STAY INFO</span>
+      <h2 class="serif text-[28px] md:text-[34px] mt-4 text-pine">예약을 준비하고 계신가요</h2>
+      <p class="text-[14.5px] text-ink/60 mt-4 font-light">입퇴실 시간, 인원별 요금, 취소 규정을 예약 안내 페이지에서 확인하실 수 있어요.</p>
+      <a href="#/reservation" class="inline-flex items-center gap-2 mt-9 px-10 py-4 bg-pine text-white rounded-full text-[15px] tracking-wide hover:bg-moss transition-colors">
+        <span class="ms" style="font-size:19px;">calendar_month</span>예약 안내 보기
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<div data-page="story">
+
+  <!-- A. Prologue banner -->
+  <section id="prologue" class="bg-cover bg-center" style="background-image:url(assets/img-12.jpg);">
+    <div class="fade"></div>
+
+    <div class="absolute top-0 left-0 right-0 z-20 pt-[104px] md:pt-[128px] px-6 md:px-16">
+      <div class="max-w-[1320px] mx-auto text-[13px] text-white/70 flex items-center gap-2">
+        <a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><span class="text-white">스테이 소개</span>
+      </div>
+    </div>
+
+    <div class="relative z-20 h-full flex flex-col items-center justify-center text-center px-6">
+      <h1 class="serif text-white text-[46px] md:text-[68px] leading-none tracking-wide">Prologue</h1>
+      <p class="text-white/80 text-[14px] md:text-[15px] mt-5 tracking-[0.02em] font-light">방태산 자락에 자리한 숲속 독채 스테이</p>
+      <div class="dot-nav flex items-center gap-2 mt-9"><span></span><span></span><span></span><span></span></div>
+    </div>
+  </section>
+
+  <!-- B. split intro -->
+  <section class="reveal grid md:grid-cols-2 items-stretch">
+    <div class="flex flex-col justify-center px-6 md:px-16 py-20 md:py-0 order-2 md:order-1">
+      <div class="max-w-md">
+        <span class="text-[13px] tracking-[0.25em] text-moss font-medium">GANGWON · INJE FOREST</span>
+        <h2 class="serif text-[32px] md:text-[38px] leading-[1.28] mt-5 text-pine">방태산 자락의<br><span class="italic text-bark">코리스테이</span></h2>
+        <div class="w-10 h-px bg-bark my-7"></div>
+        <p class="text-[15px] font-medium text-ink/85 mb-4">하루 한 팀 전용, 1,650평 규모의 프라이빗 숲속 독채</p>
+        <div class="space-y-4 text-[14.5px] leading-[1.95] text-ink/70 font-light">
+          <p>30년 넘은 소나무 군락 안, 다섯 채가 서로 마주치지 않도록 흩어져 있습니다. 벽난로와 야외 욕조, 캠프파이어까지 — 가족이 함께하는 하루를 코리스테이에서 채워보세요.</p>
+          <p>결이라는 이름처럼, 머무시는 모든 분들의 걸음이 이곳에서만큼은 느려지기를 바랍니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="order-1 md:order-2 relative min-h-[420px] md:min-h-[560px] overflow-hidden bg-cover bg-center" style="background-image:url(assets/img-13.jpg);">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-black/10"></div>
+      <div class="absolute bottom-8 left-8 text-white text-[13px] tracking-widest flex items-center gap-2" style="text-shadow:0 2px 10px rgba(0,0,0,.5);"><span class="ms" style="font-size:16px;">water_drop</span>사계절 온수 야외 욕조</div>
+    </div>
+  </section>
+
+  <!-- C. full-bleed photo strip -->
+  <section class="reveal bleed grid grid-cols-1 sm:grid-cols-2">
+    <div class="relative h-[300px] sm:h-[460px] bg-cover bg-center" style="background-image:url(assets/img-14.jpg);">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0"></div>
+      <div class="absolute bottom-8 left-8 text-white text-[13px] tracking-widest" style="text-shadow:0 2px 10px rgba(0,0,0,.5);">노래방 · 실내 놀이 공간</div>
+    </div>
+    <div class="relative h-[300px] sm:h-[460px] bg-cover bg-center" style="background-image:url(assets/img-15.jpg);">
+      <div class="absolute inset-0 bg-gradient-to-t from-black/55 via-black/0 to-black/0"></div>
+      <div class="absolute bottom-8 left-8 text-white text-[13px] tracking-widest" style="text-shadow:0 2px 10px rgba(0,0,0,.5);">다이닝 · 거실 공간</div>
+    </div>
+  </section>
+
+  <!-- D. our space collage -->
+  <section class="reveal py-24 md:py-32 px-6 md:px-16">
+    <div class="text-center mb-16">
+      <span class="text-[13px] tracking-[0.25em] text-moss font-medium">FOREST EASE</span>
+      <h2 class="serif text-[28px] md:text-[36px] mt-4 text-pine">숲의 여유와 하나되는 공간</h2>
+    </div>
+
+    <div class="max-w-[1180px] mx-auto collage">
+      <div class="c-a rounded-2xl overflow-hidden relative flex items-center justify-center" style="background:linear-gradient(160deg,#4A5D43,#1B2A1E 78%);">
+        <span class="ms text-white/20" style="font-size:74px;">cottage</span>
+      </div>
+      <div class="c-b rounded-2xl overflow-hidden relative flex items-center justify-center" style="background:linear-gradient(160deg,#7C6A52,#3B3226 78%);">
+        <span class="ms text-white/20" style="font-size:100px;">deck</span>
+      </div>
+      <div class="c-c rounded-2xl overflow-hidden relative flex items-center justify-center" style="background:linear-gradient(160deg,#3F5439,#1B2A1E 78%);">
+        <span class="ms text-white/20" style="font-size:56px;">weekend</span>
+      </div>
+      <div class="c-d rounded-2xl overflow-hidden relative flex items-center justify-center" style="background:linear-gradient(160deg,#5F715A,#243020 78%);">
+        <span class="ms text-white/20" style="font-size:56px;">deck</span>
+      </div>
+      <div class="c-q text-center px-2">
+        <p class="serif italic text-[17px] md:text-[19px] text-pine leading-[1.6]">A slow, easy time —<br>deep in the forest.</p>
+        <p class="text-[13px] text-ink/50 mt-3 font-light">숲에서 즐기는 여유로운 시간</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div data-page="rooms">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/>
+    </svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2">
+        <a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><span class="text-white">객실</span>
+      </div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">두 가지 동, 다섯 채</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">모든 동은 독채이며 다른 투숙객과 마주칠 일이 없습니다.</p>
+    </div>
+  </section>
+
+  <section class="reveal py-20 md:py-28 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto grid md:grid-cols-2 gap-10">
+      <a href="#/room-pine" class="cabin-card block group">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden relative">
+          <img src="assets/img-16.jpg" alt="소나무동 침실" class="cabin-art absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0"></div>
+          <div class="absolute top-6 left-6 px-4 py-1.5 bg-paper/90 rounded-full text-[13px] tracking-widest text-moss uppercase">Pine House</div>
+        </div>
+        <div class="flex justify-between items-end mt-6">
+          <div>
+            <h3 class="serif text-xl text-pine">소나무동</h3>
+            <p class="text-[14px] text-ink/60 mt-2 font-light">기준 2인 · 최대 4인 · 24평 · 180,000원~</p>
+          </div>
+          <span class="ms text-bark group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </div>
+      </a>
+
+      <a href="#/room-birch" class="cabin-card block group">
+        <div class="aspect-[4/3] rounded-2xl overflow-hidden relative">
+          <img src="assets/img-17.jpg" alt="자작나무동 야외 욕조" class="cabin-art absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-black/0 to-black/0"></div>
+          <div class="absolute top-6 left-6 px-4 py-1.5 bg-paper/90 rounded-full text-[13px] tracking-widest text-bark uppercase">Birch House</div>
+        </div>
+        <div class="flex justify-between items-end mt-6">
+          <div>
+            <h3 class="serif text-xl text-pine">자작나무동</h3>
+            <p class="text-[14px] text-ink/60 mt-2 font-light">기준 4인 · 최대 6인 · 32평 · 260,000원~</p>
+          </div>
+          <span class="ms text-bark group-hover:translate-x-1 transition-transform">arrow_forward</span>
+        </div>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div data-page="room-pine">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/>
+    </svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2">
+        <a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/rooms" class="hover:text-white transition-colors">객실</a><span>/</span><span class="text-white">소나무동</span>
+      </div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">소나무동 · Pine House</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">벽난로 곁에서 겨울을 나는 방</p>
+    </div>
+  </section>
+
+  <section class="reveal py-16 md:py-20 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto">
+      <div id="gal-pine"></div>
+    </div>
+  </section>
+
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto grid md:grid-cols-12 gap-14">
+      <div class="md:col-span-7">
+        <h2 class="serif text-xl text-pine mb-5">소나무동 소개</h2>
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          소나무동은 코리스테이에서 가장 먼저 지어진 동으로, 30년 된 소나무 세 그루를 마당 삼아 자리했습니다.
+          거실 한가운데 장작 벽난로가 있어 체크인 전 미리 불을 피워두면 도착과 동시에 온기를 느끼실 수 있어요.
+          침실은 하나이며, 퀸 사이즈 침대와 폭 넓은 창으로 마당의 소나무가 그대로 눈에 들어옵니다.
+          최대 4인까지 머무실 수 있어 부부 여행은 물론 아이를 동반한 가족 여행에도 잘 맞습니다.
+        </p>
+
+        <h2 class="serif text-xl text-pine mt-12 mb-5">객실 내 시설</h2>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3.5 text-[14.5px] text-ink/75 font-light">
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">local_fire_department</span>장작 벽난로</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">directions_car</span>개별 주차 1면</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">deck</span>독채 테라스</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">wifi</span>무선 인터넷</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">mode_fan</span>에어컨 · 난방</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">skillet</span>간이 취사 공간</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">bakery_dining</span>조식 배달 가능(선택)</li>
+          <li class="flex items-center gap-2.5 text-ink/40"><span class="ms" style="font-size:18px;">pets</span>반려동물 동반 불가</li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-5">
+        <div class="bg-paper rounded-2xl border border-black/5 p-7 md:p-8 sticky top-28">
+          <div class="flex justify-between items-baseline pb-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">기준 / 최대 인원</span><span class="font-medium text-pine text-[14.5px]">2인 / 4인</span>
+          </div>
+          <div class="flex justify-between items-baseline py-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">평수</span><span class="font-medium text-pine text-[14.5px]">24평 · 침실 1 · 욕실 1</span>
+          </div>
+          <div class="flex justify-between items-baseline py-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">체크인 / 체크아웃</span><span class="font-medium text-pine text-[14.5px]">15:00 / 11:00</span>
+          </div>
+
+          <p class="text-[13px] text-ink/55 mt-6 mb-3">요금 안내</p>
+          <ul class="space-y-2.5 text-[14px]">
+            <li class="flex justify-between"><span class="text-ink/70">평일 (일~목)</span><span class="font-medium text-pine">180,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">주말 (금·토)</span><span class="font-medium text-pine">230,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">성수기</span><span class="font-medium text-pine">280,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">인원 추가 (1인)</span><span class="font-medium text-pine">30,000원</span></li>
+          </ul>
+
+          <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="mt-7 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-pine text-white rounded-full text-[14.5px] hover:bg-moss transition-colors">
+            <span class="ms" style="font-size:18px;">calendar_month</span>소나무동 예약 문의
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-[1320px] mx-auto mt-16 pt-10 border-t border-black/5">
+      <a href="#/room-birch" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">
+        자작나무동 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div data-page="room-birch">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/>
+    </svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2">
+        <a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/rooms" class="hover:text-white transition-colors">객실</a><span>/</span><span class="text-white">자작나무동</span>
+      </div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">자작나무동 · Birch House</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">야외 욕조에 몸을 담그고 나무를 올려다보는 방</p>
+    </div>
+  </section>
+
+  <section class="reveal py-16 md:py-20 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto">
+      <div id="gal-birch"></div>
+    </div>
+  </section>
+
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto grid md:grid-cols-12 gap-14">
+      <div class="md:col-span-7">
+        <h2 class="serif text-xl text-pine mb-5">자작나무동 소개</h2>
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          자작나무동은 코리스테이에서 가장 넓은 동으로, 독채 테라스에 사계절 온수가 나오는 야외 욕조를 두었습니다.
+          침실은 두 개로 나뉘어 있어 아이를 동반한 가족이나 두 커플이 함께 머물기에도 넉넉합니다.
+          거실 창을 모두 개방하면 실내와 테라스가 하나로 이어져, 자작나무 숲을 바라보며 아침을 맞을 수 있어요.
+        </p>
+
+        <h2 class="serif text-xl text-pine mt-12 mb-5">객실 내 시설</h2>
+        <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3.5 text-[14.5px] text-ink/75 font-light">
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">hot_tub</span>사계절 야외 욕조</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">local_fire_department</span>장작 벽난로</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">directions_car</span>개별 주차 2면</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">deck</span>대형 테라스</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">wifi</span>무선 인터넷</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">mode_fan</span>에어컨 · 난방</li>
+          <li class="flex items-center gap-2.5"><span class="ms text-bark" style="font-size:18px;">skillet</span>간이 취사 공간</li>
+          <li class="flex items-center gap-2.5 text-ink/40"><span class="ms" style="font-size:18px;">pets</span>반려동물 동반 불가</li>
+        </ul>
+      </div>
+
+      <div class="md:col-span-5">
+        <div class="bg-paper rounded-2xl border border-black/5 p-7 md:p-8 sticky top-28">
+          <div class="flex justify-between items-baseline pb-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">기준 / 최대 인원</span><span class="font-medium text-pine text-[14.5px]">4인 / 6인</span>
+          </div>
+          <div class="flex justify-between items-baseline py-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">평수</span><span class="font-medium text-pine text-[14.5px]">32평 · 침실 2 · 욕실 1</span>
+          </div>
+          <div class="flex justify-between items-baseline py-4 border-b border-black/[0.06]">
+            <span class="text-[13px] text-ink/55">체크인 / 체크아웃</span><span class="font-medium text-pine text-[14.5px]">15:00 / 11:00</span>
+          </div>
+
+          <p class="text-[13px] text-ink/55 mt-6 mb-3">요금 안내</p>
+          <ul class="space-y-2.5 text-[14px]">
+            <li class="flex justify-between"><span class="text-ink/70">평일 (일~목)</span><span class="font-medium text-pine">260,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">주말 (금·토)</span><span class="font-medium text-pine">320,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">성수기</span><span class="font-medium text-pine">390,000원</span></li>
+            <li class="flex justify-between"><span class="text-ink/70">인원 추가 (1인)</span><span class="font-medium text-pine">35,000원</span></li>
+          </ul>
+
+          <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="mt-7 w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-pine text-white rounded-full text-[14.5px] hover:bg-moss transition-colors">
+            <span class="ms" style="font-size:18px;">calendar_month</span>자작나무동 예약 문의
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="max-w-[1320px] mx-auto mt-16 pt-10 border-t border-black/5">
+      <a href="#/room-pine" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">
+        소나무동 보기 <span class="ms" style="font-size:15px;">arrow_forward</span>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenities">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none">
+      <circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/>
+    </svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2">
+        <a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><span class="text-white">부대시설</span>
+      </div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">숲에서 보내는 하루</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">각 시설을 눌러 자세한 이용 안내와 사진을 확인하세요.</p>
+    </div>
+  </section>
+
+  <section class="reveal py-20 md:py-28 px-6 md:px-16">
+    <div class="max-w-[1320px] mx-auto grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <a href="#/amenity-fireplace" class="bento bg-paper rounded-2xl p-8 border border-black/5 flex flex-col justify-between min-h-[190px]">
+        <span class="ms text-bark" style="font-size:28px;">local_fire_department</span>
+        <div><h3 class="text-[16px] font-medium mt-6 text-pine">벽난로</h3><p class="text-ink/60 text-[13.5px] mt-2 font-light">모든 동 공통 제공</p></div>
+      </a>
+      <a href="#/amenity-jacuzzi" class="bento bg-paper rounded-2xl p-8 border border-black/5 flex flex-col justify-between min-h-[190px]">
+        <span class="ms text-bark" style="font-size:28px;">hot_tub</span>
+        <div><h3 class="text-[16px] font-medium mt-6 text-pine">야외 자쿠지</h3><p class="text-ink/60 text-[13.5px] mt-2 font-light">자작나무동 전용</p></div>
+      </a>
+      <a href="#/amenity-trail" class="bento bg-paper rounded-2xl p-8 border border-black/5 flex flex-col justify-between min-h-[190px]">
+        <span class="ms text-bark" style="font-size:28px;">hiking</span>
+        <div><h3 class="text-[16px] font-medium mt-6 text-pine">숲길 산책로</h3><p class="text-ink/60 text-[13.5px] mt-2 font-light">단지 내 1.2km 순환 코스</p></div>
+      </a>
+      <a href="#/amenity-stars" class="bento bg-paper rounded-2xl p-8 border border-black/5 flex flex-col justify-between min-h-[190px]">
+        <span class="ms text-bark" style="font-size:28px;">nightlight</span>
+        <div><h3 class="text-[16px] font-medium mt-6 text-pine">별빛 테라스 · 캠프파이어</h3><p class="text-ink/60 text-[13.5px] mt-2 font-light">저녁 7시~11시 운영</p></div>
+      </a>
+      <a href="#/amenity-brunch" class="bento bg-paper rounded-2xl p-8 border border-black/5 flex flex-col justify-between min-h-[190px]">
+        <span class="ms text-bark" style="font-size:28px;">bakery_dining</span>
+        <div><h3 class="text-[16px] font-medium mt-6 text-pine">아침 브런치</h3><p class="text-ink/60 text-[13.5px] mt-2 font-light">전날 예약제, 동별 배달</p></div>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenity-fireplace">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/amenities" class="hover:text-white transition-colors">부대시설</a><span>/</span><span class="text-white">벽난로</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4 flex items-center gap-3"><span class="ms" style="font-size:34px;">local_fire_department</span>벽난로</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">모든 동 공통 제공, 장작을 때는 실물 벽난로</p>
+    </div>
+  </section>
+  <section class="reveal py-16 md:py-20 px-6 md:px-16"><div class="max-w-[900px] mx-auto"><div id="gal-fireplace"></div></div></section>
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[900px] mx-auto grid sm:grid-cols-3 gap-10">
+      <div class="sm:col-span-2">
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          모든 동에는 장작을 때는 실물 벽난로가 있습니다. 체크인 시 안내해드리는 장작은 1박당 소나무동 5단, 자작나무동 8단이 무료로 제공되며,
+          추가 장작은 프런트에서 구매하실 수 있어요. 불을 피우고 끄는 방법은 체크인 안내문에 자세히 적혀 있고, 처음 이용하시는 분들을 위해
+          도착 시 직원이 직접 시범을 보여드립니다.
+        </p>
+      </div>
+      <ul class="space-y-3.5 text-[14px] text-ink/75 font-light">
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>1박 기준 장작 무료 제공</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>사용법 안내문 동봉</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>객실마다 소화기 비치</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>굴뚝 매년 점검</li>
+      </ul>
+    </div>
+    <div class="max-w-[900px] mx-auto mt-14 pt-8 border-t border-black/5">
+      <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">부대시설 목록으로 <span class="ms" style="font-size:15px;">arrow_forward</span></a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenity-jacuzzi">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/amenities" class="hover:text-white transition-colors">부대시설</a><span>/</span><span class="text-white">야외 자쿠지</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4 flex items-center gap-3"><span class="ms" style="font-size:34px;">hot_tub</span>야외 자쿠지</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">자작나무동 전용, 사계절 온수 욕조</p>
+    </div>
+  </section>
+  <section class="reveal py-16 md:py-20 px-6 md:px-16"><div class="max-w-[900px] mx-auto"><div id="gal-jacuzzi"></div></div></section>
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[900px] mx-auto grid sm:grid-cols-3 gap-10">
+      <div class="sm:col-span-2">
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          자작나무동 테라스에 있는 야외 욕조는 사계절 온수가 나옵니다. 눈이 내리는 겨울, 자작나무 사이로 김이 피어오르는 모습을 보며
+          몸을 담그실 수 있어요. 매 투숙 전 물을 완전히 교체하고 청소하며, 수온은 항상 38~40도로 유지됩니다.
+        </p>
+      </div>
+      <ul class="space-y-3.5 text-[14px] text-ink/75 font-light">
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>이용시간 24시간</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>수온 38~40도 유지</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>자작나무동 투숙객 전용</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>매 예약마다 물 교체</li>
+      </ul>
+    </div>
+    <div class="max-w-[900px] mx-auto mt-14 pt-8 border-t border-black/5">
+      <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">부대시설 목록으로 <span class="ms" style="font-size:15px;">arrow_forward</span></a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenity-trail">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/amenities" class="hover:text-white transition-colors">부대시설</a><span>/</span><span class="text-white">숲길 산책로</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4 flex items-center gap-3"><span class="ms" style="font-size:34px;">hiking</span>숲길 산책로</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">단지 내부를 도는 1.2km 순환 코스</p>
+    </div>
+  </section>
+  <section class="reveal py-16 md:py-20 px-6 md:px-16"><div class="max-w-[900px] mx-auto"><div id="gal-trail"></div></div></section>
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[900px] mx-auto grid sm:grid-cols-3 gap-10">
+      <div class="sm:col-span-2">
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          단지 내부를 도는 1.2km 순환 산책로가 있습니다. 경사가 완만해 아이나 어르신도 무리 없이 걸으실 수 있고,
+          중간에 벤치 두 곳이 있어 잠시 앉아 쉬어가기 좋습니다. 야간에는 낮은 조도의 유도등이 길을 밝힙니다.
+        </p>
+      </div>
+      <ul class="space-y-3.5 text-[14px] text-ink/75 font-light">
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>총 길이 1.2km</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>편도 약 25분 소요</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>야간 유도등 운영</li>
+        <li class="flex gap-2.5 text-ink/40"><span class="ms" style="font-size:18px;">cancel</span>반려동물 동반 불가</li>
+      </ul>
+    </div>
+    <div class="max-w-[900px] mx-auto mt-14 pt-8 border-t border-black/5">
+      <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">부대시설 목록으로 <span class="ms" style="font-size:15px;">arrow_forward</span></a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenity-stars">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/amenities" class="hover:text-white transition-colors">부대시설</a><span>/</span><span class="text-white">별빛 테라스 · 캠프파이어</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4 flex items-center gap-3"><span class="ms" style="font-size:34px;">nightlight</span>별빛 테라스 · 캠프파이어</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">저녁 7시부터 밤 11시까지 운영되는 공용 공간</p>
+    </div>
+  </section>
+  <section class="reveal py-16 md:py-20 px-6 md:px-16"><div class="max-w-[900px] mx-auto"><div id="gal-stars"></div></div></section>
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[900px] mx-auto grid sm:grid-cols-3 gap-10">
+      <div class="sm:col-span-2">
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          해가 지면 각 동 테라스와 공용 캠프파이어 존에 낮은 조도의 조명이 들어옵니다. 캠프파이어 존은 저녁 7시부터 밤 11시까지 운영하며,
+          장작과 마시멜로 세트는 프런트에서 대여해드립니다. 조명을 낮춘 만큼 맑은 날에는 은하수까지 보이곤 합니다.
+        </p>
+      </div>
+      <ul class="space-y-3.5 text-[14px] text-ink/75 font-light">
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>운영시간 19:00~23:00</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>장작·마시멜로 세트 대여</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>공용 공간, 예약 불필요</li>
+        <li class="flex gap-2.5 text-ink/40"><span class="ms" style="font-size:18px;">cancel</span>우천 시 운영 중단</li>
+      </ul>
+    </div>
+    <div class="max-w-[900px] mx-auto mt-14 pt-8 border-t border-black/5">
+      <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">부대시설 목록으로 <span class="ms" style="font-size:15px;">arrow_forward</span></a>
+    </div>
+  </section>
+</div>
+
+<div data-page="amenity-brunch">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><a href="#/amenities" class="hover:text-white transition-colors">부대시설</a><span>/</span><span class="text-white">아침 브런치</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4 flex items-center gap-3"><span class="ms" style="font-size:34px;">bakery_dining</span>아침 브런치</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">전날 예약제, 각 동 테라스로 배달</p>
+    </div>
+  </section>
+  <section class="reveal py-16 md:py-20 px-6 md:px-16"><div class="max-w-[900px] mx-auto"><div id="gal-brunch"></div></div></section>
+  <section class="reveal pb-24 md:pb-32 px-6 md:px-16">
+    <div class="max-w-[900px] mx-auto grid sm:grid-cols-3 gap-10">
+      <div class="sm:col-span-2">
+        <p class="text-[15px] leading-[2] text-ink/75 font-light">
+          전날 오후 6시까지 예약하시면 다음 날 아침 8시에서 10시 사이 각 동 테라스로 브런치를 가져다드립니다.
+          구움 빵과 샐러드, 커피로 구성되며 메뉴는 계절마다 바뀝니다. 알레르기가 있으시면 예약 시 미리 알려주세요.
+        </p>
+      </div>
+      <ul class="space-y-3.5 text-[14px] text-ink/75 font-light">
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>전날 18:00까지 예약</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>배달시간 08:00~10:00</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>1인 15,000원</li>
+        <li class="flex gap-2.5"><span class="ms text-bark" style="font-size:18px;">check_circle</span>알레르기 사전 안내 가능</li>
+      </ul>
+    </div>
+    <div class="max-w-[900px] mx-auto mt-14 pt-8 border-t border-black/5">
+      <a href="#/amenities" class="inline-flex items-center gap-2 text-[13.5px] tracking-widest uppercase text-bark border-b border-bark/40 pb-1 hover:border-bark transition-colors">부대시설 목록으로 <span class="ms" style="font-size:15px;">arrow_forward</span></a>
+    </div>
+  </section>
+</div>
+
+<div data-page="nature">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -left-28 top-1/2 -translate-y-1/2 w-[380px] h-[380px] text-white/[0.06] ring-spin-rev" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="78" class="ring"/><circle cx="100" cy="100" r="58" class="ring"/><circle cx="100" cy="100" r="36" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><span class="text-white">숲 산책</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">걸어서 닿을 수 있는 세 가지 풍경</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">숙소 밖으로 나서면 만날 수 있는 방태산의 얼굴들</p>
+    </div>
+  </section>
+
+  <section class="reveal py-20 md:py-28 px-6 md:px-16">
+    <div class="max-w-[1000px] mx-auto space-y-16">
+      <div class="grid sm:grid-cols-[110px_1fr] gap-6 sm:gap-10">
+        <div><p class="text-moss text-[13px] tracking-widest font-medium">01</p><p class="text-ink/50 text-[13px] mt-1">도보 5분</p></div>
+        <div><h3 class="serif text-xl text-pine">방태천 계곡</h3><p class="text-[14.5px] text-ink/70 leading-[1.9] font-light mt-3">여름엔 발을 담그고, 겨울엔 물소리만 듣고 오셔도 좋아요. 계곡을 따라 난 오솔길은 코리스테이 정문에서 바로 이어집니다.</p></div>
+      </div>
+      <div class="grid sm:grid-cols-[110px_1fr] gap-6 sm:gap-10">
+        <div><p class="text-moss text-[13px] tracking-widest font-medium">02</p><p class="text-ink/50 text-[13px] mt-1">도보 12분</p></div>
+        <div><h3 class="serif text-xl text-pine">전망 데크</h3><p class="text-[14.5px] text-ink/70 leading-[1.9] font-light mt-3">해발 780m, 일출과 운해를 볼 수 있는 지점입니다. 새벽에 오르시는 분들을 위해 완만한 흙길로 안내로를 냈습니다.</p></div>
+      </div>
+      <div class="grid sm:grid-cols-[110px_1fr] gap-6 sm:gap-10">
+        <div><p class="text-moss text-[13px] tracking-widest font-medium">03</p><p class="text-ink/50 text-[13px] mt-1">차량 8분</p></div>
+        <div><h3 class="serif text-xl text-pine">방태산 자연휴양림</h3><p class="text-[14.5px] text-ink/70 leading-[1.9] font-light mt-3">장기 산행을 원하신다면 이곳에서 등산로가 이어집니다. 프런트에서 무료 등산 지도를 받아가실 수 있어요.</p></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div data-page="reservation">
+  <section class="page-banner pb-14 px-6 md:px-16 bg-pine text-white relative overflow-hidden">
+    <svg class="absolute -right-20 -top-20 w-[300px] h-[300px] text-white/[0.07] ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+    <div class="max-w-[1320px] mx-auto relative">
+      <div class="text-[13px] text-white/55 flex items-center gap-2"><a href="#/home" class="hover:text-white transition-colors">홈</a><span>/</span><span class="text-white">예약안내</span></div>
+      <h1 class="serif text-[30px] md:text-[42px] mt-4">예약 안내</h1>
+      <p class="text-white/65 mt-3 max-w-md font-light">머무시기 전 확인해 주세요</p>
+    </div>
+  </section>
+
+  <section class="reveal py-20 md:py-28 px-6 md:px-16">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-paper rounded-2xl border border-black/5 p-8 md:p-12 grid md:grid-cols-2 gap-12">
+        <div>
+          <h3 class="flex items-center gap-2 text-[16px] font-medium text-pine mb-5"><span class="ms text-bark" style="font-size:20px;">schedule</span>입퇴실 안내</h3>
+          <ul class="space-y-4 text-[14.5px] text-ink/75 font-light">
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>체크인</span><span class="font-medium text-pine">15:00</span></li>
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>체크아웃</span><span class="font-medium text-pine">11:00</span></li>
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>반려동물</span><span class="font-medium text-pine">동반 불가</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="flex items-center gap-2 text-[16px] font-medium text-pine mb-5"><span class="ms text-bark" style="font-size:20px;">groups</span>인원 및 요금</h3>
+          <ul class="space-y-4 text-[14.5px] text-ink/75 font-light">
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>소나무동 (2인 기준)</span><span class="font-medium text-pine">180,000원~</span></li>
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>자작나무동 (4인 기준)</span><span class="font-medium text-pine">260,000원~</span></li>
+            <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>인원 추가 (1인)</span><span class="font-medium text-pine">30,000원~</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bg-paper rounded-2xl border border-black/5 p-8 md:p-12 mt-8">
+        <h3 class="flex items-center gap-2 text-[16px] font-medium text-pine mb-5"><span class="ms text-bark" style="font-size:20px;">event_busy</span>취소 및 환불 규정</h3>
+        <ul class="space-y-4 text-[14.5px] text-ink/75 font-light">
+          <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>이용일 10일 전까지</span><span class="font-medium text-pine">100% 환불</span></li>
+          <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>이용일 7일 전까지</span><span class="font-medium text-pine">50% 환불</span></li>
+          <li class="flex justify-between border-b border-black/[0.06] pb-3"><span>이용일 3일 전까지</span><span class="font-medium text-pine">20% 환불</span></li>
+          <li class="flex justify-between"><span>이용일 2일 전부터</span><span class="font-medium text-pine">환불 불가</span></li>
+        </ul>
+      </div>
+
+      <div class="text-center mt-12">
+        <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-10 py-4 bg-pine text-white rounded-full text-[15px] tracking-wide hover:bg-moss transition-colors">
+          <span class="ms" style="font-size:19px;">calendar_month</span>예약 문의하기
+        </a>
+        <p class="text-[13px] text-ink/45 mt-4">본 페이지는 샘플 제작용으로, 실제 가격·일정과 다를 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+</main>
+
+<!-- 이벤트 팝업 -->
+<div id="event-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-5" style="background:rgba(15,20,12,.6);">
+  <div class="relative bg-paper rounded-3xl overflow-hidden w-full max-w-md shadow-2xl" style="transform:scale(.96); opacity:0; transition:opacity .3s ease, transform .3s ease;" id="event-modal-card">
+    <button type="button" id="event-modal-close" aria-label="닫기" class="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-black/35 hover:bg-black/55 text-white flex items-center justify-center transition-colors">
+      <span class="ms" style="font-size:19px;">close</span>
+    </button>
+    <div class="relative h-44 sm:h-52 bg-cover bg-center flex items-end p-6" style="background:linear-gradient(150deg,#3F5439,#1B2A1E 78%);">
+      <svg class="absolute -right-8 -bottom-10 w-40 h-40 text-white/10 ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/><circle cx="100" cy="100" r="44" class="ring"/></svg>
+      <span class="relative text-[12px] tracking-[0.25em] text-sage uppercase">Autumn Event</span>
+    </div>
+    <div class="p-7 sm:p-8">
+      <h3 class="serif text-[24px] sm:text-[27px] text-pine leading-[1.3]">가을 숲, 머무는 이틀에<br>15% 할인</h3>
+      <p class="text-[14px] text-ink/65 mt-4 leading-relaxed font-light">11월 30일까지 2박 이상 예약하시면 숙박 요금의 15%를 할인해드려요. 벽난로와 야외 욕조가 가장 아름다운 계절, 코리스테이에서 보내보세요.</p>
+      <div class="flex items-center gap-2 mt-6 text-[13px] text-bark">
+        <span class="ms" style="font-size:17px;">calendar_month</span> 기간: ~2026.11.30 · 2박 이상 예약 시
+      </div>
+      <div class="flex flex-col sm:flex-row gap-3 mt-7">
+        <a href="https://booking.naver.com/" target="_blank" rel="noopener" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-pine text-white rounded-full text-[14px] hover:bg-moss transition-colors">
+          예약 문의하기
+        </a>
+        <button type="button" id="event-modal-dismiss" class="px-6 py-3.5 text-[13px] text-ink/50 hover:text-ink/80 transition-colors">
+          오늘 하루 안보기
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer class="bg-pine text-white pt-20 pb-10 px-6 md:px-16">
+  <div class="max-w-[1320px] mx-auto">
+    <div class="flex flex-col md:flex-row justify-between gap-12 pb-12 border-b border-white/10">
+      <div>
+        <span class="serif text-2xl text-sage">코리스테이</span>
+        <p class="text-white/50 text-[13px] mt-3 tracking-wide">KORI STAY · 강원도 인제 방태산 숲속 독채펜션</p>
+        <a href="tel:0100000000" class="block text-2xl font-light mt-6 tracking-wide">010-0000-0000</a>
+      </div>
+      <nav class="flex flex-wrap gap-x-8 gap-y-3 text-[14px] text-white/75 md:pt-2">
+        <a href="#/story" class="hover:text-white transition-colors">스테이 소개</a>
+        <a href="#/rooms" class="hover:text-white transition-colors">객실</a>
+        <a href="#/amenities" class="hover:text-white transition-colors">부대시설</a>
+        <a href="#/nature" class="hover:text-white transition-colors">숲 산책</a>
+        <a href="#/reservation" class="hover:text-white transition-colors">예약안내</a>
+      </nav>
+    </div>
+    <div class="flex flex-col-reverse md:flex-row justify-between items-start md:items-center gap-6 pt-8">
+      <div class="text-[13px] text-white/45 leading-relaxed">
+        <p>대표자 · 홍길동&nbsp;&nbsp;|&nbsp;&nbsp;사업자등록번호 · 000-00-00000</p>
+        <p class="mt-1">강원도 인제군 상남면 방태산길 000&nbsp;&nbsp;|&nbsp;&nbsp;© Kori Stay. All rights reserved.</p>
+      </div>
+      <div class="flex items-center gap-5 text-white/60">
+        <a href="#" aria-label="Instagram" class="hover:text-white transition-colors"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="카카오톡" class="hover:text-white transition-colors"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.48 3 2 6.58 2 11c0 2.83 1.67 5.33 4.17 6.83L5.5 21l3.67-1.67c.92.25 1.88.38 2.83.38 5.52 0 10-3.58 10-8S17.52 3 12 3z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  var GRADS = [
+    'linear-gradient(155deg,#4A5D43,#1B2A1E 80%)',
+    'linear-gradient(155deg,#7C6A52,#3B3226 80%)',
+    'linear-gradient(155deg,#3F5439,#1B2A1E 80%)',
+    'linear-gradient(155deg,#5F715A,#243020 80%)',
+    'linear-gradient(155deg,#8C7857,#3B3226 80%)'
+  ];
+  function renderGallery(id, shots){
+    var el = document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = shots.map(function(s,i){
+      var inner = s.photo
+        ? '<img src="'+s.photo+'" alt="'+s.label+'" class="w-full h-full object-cover">'
+        : '<span class="ms text-white/70" style="font-size:32px;">'+s.icon+'</span>'
+          + '<svg class="absolute -right-6 -bottom-6 w-24 h-24 text-white/10 ring-spin" viewBox="0 0 200 200" fill="none"><circle cx="100" cy="100" r="96" class="ring"/><circle cx="100" cy="100" r="70" class="ring"/></svg>';
+      var bg = s.photo ? '' : ' style="background:'+GRADS[i % GRADS.length]+'"';
+      return '<div class="flex-none w-[88%] sm:w-[64%] lg:w-[44%] snap-start">'
+        + '<div class="aspect-[4/3] rounded-xl relative overflow-hidden flex items-center justify-center"'+bg+'>'
+        + inner
+        + '</div><p class="text-[13px] text-ink/60 mt-2.5">'+s.label+'</p></div>';
+    }).join('');
+  }
+
+  /* ---- room detail: large main viewer + clickable thumbnail strip ---- */
+  function renderRoomGallery(id, shots){
+    var el = document.getElementById(id);
+    if(!el) return;
+
+    function tileBg(s, i){
+      return s.photo ? "background-image:url('" + s.photo + "')" : "background:" + GRADS[i % GRADS.length];
+    }
+    function tileIcon(s){
+      return s.photo ? '' : '<span class="ms rg-icon">' + s.icon + '</span>';
+    }
+
+    var slides = shots.map(function(s, i){
+      return '<div class="rg-slide' + (i === 0 ? ' is-active' : '') + '" style="' + tileBg(s, i) + '">' + tileIcon(s) + '</div>';
+    }).join('');
+
+    var thumbs = shots.map(function(s, i){
+      return '<button type="button" class="rg-thumb' + (i === 0 ? ' is-active' : '') + '" data-idx="' + i + '" style="' + tileBg(s, i) + '" aria-label="' + s.label + ' 보기">' + tileIcon(s) + '</button>';
+    }).join('');
+
+    el.innerHTML =
+      '<div class="room-gallery-frame">' + slides
+      + '<button type="button" class="rg-arrow rg-prev" aria-label="이전 사진"><span class="ms" style="font-size:19px;">arrow_back_ios_new</span></button>'
+      + '<button type="button" class="rg-arrow rg-next" aria-label="다음 사진"><span class="ms" style="font-size:19px;">arrow_forward_ios</span></button>'
+      + '<div class="rg-caption">' + shots[0].label + '</div>'
+      + '<div class="rg-counter"><span class="rg-cur">1</span> / ' + shots.length + '</div>'
+      + '</div>'
+      + '<div class="room-gallery-thumbs">' + thumbs + '</div>';
+
+    var slideEls = el.querySelectorAll('.rg-slide');
+    var thumbEls = el.querySelectorAll('.rg-thumb');
+    var curEl = el.querySelector('.rg-cur');
+    var capEl = el.querySelector('.rg-caption');
+    var cur = 0;
+
+    function goTo(i){
+      cur = (i + shots.length) % shots.length;
+      slideEls.forEach(function(s, idx){ s.classList.toggle('is-active', idx === cur); });
+      thumbEls.forEach(function(t, idx){ t.classList.toggle('is-active', idx === cur); });
+      curEl.textContent = String(cur + 1);
+      capEl.textContent = shots[cur].label;
+    }
+
+    el.querySelector('.rg-prev').addEventListener('click', function(){ goTo(cur - 1); });
+    el.querySelector('.rg-next').addEventListener('click', function(){ goTo(cur + 1); });
+    thumbEls.forEach(function(t){
+      t.addEventListener('click', function(){ goTo(parseInt(t.dataset.idx, 10)); });
+    });
+  }
+
+  renderRoomGallery('gal-pine', [
+    {photo:'assets/img-18.jpg', label:'벽난로가 있는 침실'},
+    {photo:'assets/img-19.jpg', label:'외관'},
+    {photo:'assets/img-20.jpg', label:'욕실'},
+    {photo:'assets/img-21.jpg', label:'테라스'}
+  ]);
+  renderRoomGallery('gal-birch', [
+    {photo:'assets/img-22.jpg', label:'야외 욕조'},
+    {photo:'assets/img-23.jpg', label:'외관'},
+    {photo:'assets/img-24.jpg', label:'거실'},
+    {photo:'assets/img-25.jpg', label:'침실 1'},
+    {photo:'assets/img-26.jpg', label:'침실 2'}
+  ]);
+  renderRoomGallery('gal-fireplace', [
+    {photo:'assets/img-27.jpg', label:'장작 벽난로'},
+    {icon:'inventory_2', label:'제공되는 장작'},
+    {icon:'menu_book', label:'사용법 안내문'}
+  ]);
+  renderRoomGallery('gal-jacuzzi', [
+    {photo:'assets/img-28.jpg', label:'야외 욕조'},
+    {icon:'deck', label:'테라스 전경'},
+    {icon:'nights_stay', label:'야간 조명'}
+  ]);
+  renderRoomGallery('gal-trail', [
+    {photo:'assets/img-29.jpg', label:'산책로 입구'},
+    {icon:'park', label:'순환 코스'},
+    {icon:'chair', label:'중간 벤치'}
+  ]);
+  renderRoomGallery('gal-stars', [
+    {photo:'assets/img-30.jpg', label:'별빛 테라스'},
+    {icon:'local_fire_department', label:'캠프파이어 존'},
+    {icon:'outdoor_grill', label:'마시멜로 세트'}
+  ]);
+  renderRoomGallery('gal-brunch', [
+    {photo:'assets/img-31.jpg', label:'구움 빵'},
+    {icon:'eco', label:'샐러드'},
+    {icon:'coffee', label:'커피'}
+  ]);
+
+  function route(){
+    var raw = location.hash.replace('#/','');
+    var page = raw || 'home';
+    document.querySelectorAll('[data-page]').forEach(function(el){
+      el.classList.toggle('active', el.dataset.page === page);
+    });
+    document.body.classList.toggle('is-home', page === 'home');
+    document.querySelectorAll('.nav-link').forEach(function(a){
+      a.classList.toggle('is-active', a.dataset.nav === page);
+    });
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', route);
+  window.addEventListener('DOMContentLoaded', route);
+
+  var hdr = document.getElementById('hdr');
+  window.addEventListener('scroll', function(){
+    if (window.scrollY > 60) hdr.classList.add('on'); else hdr.classList.remove('on');
+  }, { passive:true });
+
+  var burger = document.getElementById('burger');
+  var drawer = document.getElementById('drawer');
+  var dim = document.getElementById('dim');
+  var drawerClose = document.getElementById('drawerClose');
+  function openDrawer(){ drawer.classList.add('open'); dim.classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeDrawer(){ drawer.classList.remove('open'); dim.classList.remove('open'); document.body.style.overflow=''; }
+  burger.addEventListener('click', openDrawer);
+  drawerClose.addEventListener('click', closeDrawer);
+  dim.addEventListener('click', closeDrawer);
+  document.querySelectorAll('#drawer a').forEach(function(a){ a.addEventListener('click', closeDrawer); });
+
+  var layers = document.querySelectorAll('#hero .layer');
+  window.addEventListener('scroll', function(){
+    var y = window.scrollY;
+    layers.forEach(function(l){
+      var speed = parseFloat(l.getAttribute('data-speed'));
+      l.style.transform = 'translateY(' + (y * speed) + 'px)';
+    });
+  }, { passive:true });
+
+  var heroSlides = document.querySelectorAll('#hero .hero-slide');
+  if (heroSlides.length > 1) {
+    var heroIdx = 0;
+    setInterval(function(){
+      heroSlides[heroIdx].classList.remove('is-active');
+      heroIdx = (heroIdx + 1) % heroSlides.length;
+      heroSlides[heroIdx].classList.add('is-active');
+    }, 6500);
+  }
+
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); }
+      });
+    }, { threshold:0.08 });
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('show'); });
+  }
+
+  /* ---- 이벤트 팝업 ---- */
+  (function(){
+    var modal = document.getElementById('event-modal');
+    var card = document.getElementById('event-modal-card');
+    if (!modal || !card) return;
+
+    function todayKey(){
+      var d = new Date();
+      return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+    }
+
+    function openModal(){
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      requestAnimationFrame(function(){
+        card.style.opacity = '1';
+        card.style.transform = 'scale(1)';
+      });
+    }
+    function closeModal(hideToday){
+      card.style.opacity = '0';
+      card.style.transform = 'scale(.96)';
+      setTimeout(function(){
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }, 250);
+      if (hideToday) {
+        try { localStorage.setItem('koriEventHideDate', todayKey()); } catch(e){}
+      }
+    }
+
+    document.getElementById('event-modal-close').addEventListener('click', function(){ closeModal(false); });
+    document.getElementById('event-modal-dismiss').addEventListener('click', function(){ closeModal(true); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(false); });
+
+    var hiddenToday = false;
+    try { hiddenToday = localStorage.getItem('koriEventHideDate') === todayKey(); } catch(e){}
+    if (!hiddenToday) {
+      setTimeout(openModal, 700);
+    }
+  })();
+</script>
+
+</body>
+</html>
